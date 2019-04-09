@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_monedero"
+            android:icon="@mipmap/group226"
+            android:title="Mi monedero"/>
+        <item
+            android:id="@+id/menu_tiendas"
+            android:icon="@mipmap/group227"
+            android:title="Buscar una tienda" />
+        <item
+            android:id="@+id/menu_carrito"
+            android:icon="@mipmap/cart"
+            android:title="Carrito" />
+        <item
+            android:id="@+id/menu_codigos"
+            android:icon="@mipmap/codigos"
+            android:title="Mis codigos" />
+        <item
+            android:id="@+id/menu_califica"
+            android:icon="@mipmap/codigos"
+            android:title="Califica tus compras" />
+        <item
+            android:id="@+id/menu_recompensas"
+            android:icon="@mipmap/recompensas"
+            android:title="Recompensas" />
+    </group>
+
+    <item android:title="Compartir">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Compartir" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Enviar dinero" />
+        </menu>
+    </item>
+
+
+
+    <item android:title="Sesion">
+        <menu>
+            <item
+                android:id="@+id/menu_logon"
+                android:icon="@drawable/register"
+                android:title="Registrarse" />
+            <item
+                android:id="@+id/menu_login"
+                android:icon="@drawable/login"
+                android:title="Iniciar sesión" />
+            <item
+                android:id="@+id/menu_sesion"
+                android:title="Cerar sesion" />
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/resumen_item"
+    android:elevation="20dp"
+    android:layout_margin="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rci_ncompra"
+            android:text="Numero de compra: 2020"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rci_fecha"
+            android:text="Fecha de compra"
+            android:layout_below="@id/rci_ncompra"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rci_tienda"
+            android:text="Tienda"
+            android:layout_below="@id/rci_fecha"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/dd"
+            android:layout_below="@id/rci_tienda"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/rci_total"
+                android:text="Total"
+                android:textStyle="bold|normal"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/rci_vuelto"
+                android:text="Te devolveremos: $0000"
+                android:textStyle="italic|normal"
+                />
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rci_status"
+            android:layout_below="@id/dd"
+            android:text="En espera de autorizacion"
+            android:textStyle="italic|normal"
+            />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

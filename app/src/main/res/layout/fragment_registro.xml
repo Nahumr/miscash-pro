@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Registro">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/tiendita"
+        android:paddingTop="30dp"
+        android:paddingHorizontal="20dp"
+        android:orientation="vertical"
+        >
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hsc"
+            android:layout_weight="0.9"
+            android:layout_marginBottom="20dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl1"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro-Nombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Nombre"
+                        android:padding="10dp"
+                        android:gravity="center_vertical"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:inputType="text"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl2"
+                    android:layout_below="@id/fl1"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro-apellidoP"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Apellido paterno"
+                        android:inputType="text"
+                        android:padding="10dp"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl3"
+                    android:layout_below="@id/fl2"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro-apellidoM"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Apellido materno"
+                        android:padding="10dp"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:inputType="text"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl4"
+                    android:layout_below="@id/fl3"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro_fnacimiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Año de nacimiento"
+                        android:padding="10dp"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:inputType="phone"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl5"
+                    android:layout_below="@id/fl4"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro-correo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Correo electronico"
+                        android:padding="10dp"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:inputType="textEmailAddress"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl6"
+                    android:layout_below="@id/fl5"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro-telefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Telefono"
+                        android:padding="10dp"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:inputType="phone"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fl7"
+                    android:layout_below="@id/fl6"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/form1" />
+
+                    <EditText
+                        android:id="@+id/registro-pass"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:hint="Contraseña"
+                        android:padding="10dp"
+                        android:textColorHint="#FFFFFF"
+                        android:textColor="#FFFFFF"
+                        android:inputType="textPassword"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                </FrameLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:layout_gravity="center_horizontal"
+            >
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/btngreen"
+                android:layout_gravity="center_horizontal"
+                android:background="@null"
+                android:id="@+id/registrar"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Registrar"
+                android:textColor="#FFFFFF"
+                android:background="@null"
+                android:gravity="center_horizontal|center_vertical"
+                android:textSize="20sp"
+                />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>
