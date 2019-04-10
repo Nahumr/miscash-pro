@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity
         nombre.setText(helper.nombreApellido());
         saldo.setText("Saldo: $1000.00 MX");
 
+        addFragment(new Mapa_tiendas(),true,"one");
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 

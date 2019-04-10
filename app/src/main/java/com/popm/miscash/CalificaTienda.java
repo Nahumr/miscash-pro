@@ -67,14 +67,16 @@ public class CalificaTienda extends Fragment {
             });
 
             builder.show();
+        }else{
+            recycle= view.findViewById(R.id.rv_tiendas);
+            LinearLayoutManager llm = new LinearLayoutManager(getContext());
+            recycle.setLayoutManager(llm);
+            recycle.setHasFixedSize(true);
+            TiendasRv tiendas = new TiendasRv(data(),getContext());
+            recycle.setAdapter(tiendas);
         }
 
-        recycle= view.findViewById(R.id.rv_tiendas);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        recycle.setLayoutManager(llm);
-        recycle.setHasFixedSize(true);
-        TiendasRv tiendas = new TiendasRv(data(),getContext());
-        recycle.setAdapter(tiendas);
+
         return view;
     }
 
