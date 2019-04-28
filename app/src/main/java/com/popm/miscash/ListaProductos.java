@@ -52,7 +52,6 @@ public class ListaProductos extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         recycle.setLayoutManager(llm);
         recycle.setHasFixedSize(true);
-        Productos();
         RecyclerAdapter adapter = new RecyclerAdapter(Productos(),getContext());
         recycle.setAdapter(adapter);
         return view;

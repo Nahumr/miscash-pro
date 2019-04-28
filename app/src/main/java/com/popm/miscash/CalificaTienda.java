@@ -83,16 +83,16 @@ public class CalificaTienda extends Fragment {
 
     List<Compra> data (){
         List <Compra> tiendas = new ArrayList<>();
-
+        UsuarioSQL usuario = new UsuarioSQL(getContext());
         SqlServerC helper = new SqlServerC();
 
         try {
 
             Statement statement = helper.conexionBD().createStatement();
-            ResultSet resultSet = statement.executeQuery("select tienda.id_tienda,ticket.id_ticket,tienda.calif,tienda.nombre " +
+            ResultSet resultSet = statement.executeQuery("select tienda.id_tienda,ticket.id_ticket,tienda.calif,tienda.nombre, ticket.total " +
                                                                 "from tienda inner join ticket on tienda.id_tienda=ticket.tienda " +
                                                                 "inner join usuario on ticket.usuario = usuario.correo " +
-                                                                "where ticket.usuario='nrc545@gmail.com' and ticket.statusT='Y'" +
+                                                                "where ticket.usuario='"+usuario.correo()+"' and ticket.statusT='Y'" +
                                                                 "and ticket.statusU='X';");
 
             while (resultSet.next()){
@@ -101,7 +101,8 @@ public class CalificaTienda extends Fragment {
                         resultSet.getInt(1),
                         resultSet.getInt(2),
                         resultSet.getFloat(3),
-                        resultSet.getString(4)
+                        resultSet.getString(4),
+                        String.valueOf(resultSet.getFloat(5))
                 ));
             }
 

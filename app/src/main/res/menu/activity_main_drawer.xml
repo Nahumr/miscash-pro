@@ -29,6 +29,9 @@
             android:id="@+id/menu_recompensas"
             android:icon="@mipmap/recompensas"
             android:title="Recompensas" />
+        <item
+            android:id="@+id/mtarjeta"
+            android:title="agregar una tarjeta" />
     </group>
 
     <item android:title="Compartir">

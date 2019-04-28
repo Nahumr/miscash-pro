@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.popm.miscash.Carritoc.CarritoItem;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Admin_SQLite extends SQLiteOpenHelper {
@@ -78,6 +79,38 @@ public class Admin_SQLite extends SQLiteOpenHelper {
         return datos;
     }
 
+    public LinkedList<Float> totales (){
+        LinkedList <Float> totales = new LinkedList<Float>();
+        SQLiteDatabase db =  getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT sum (producto_precio*producto_cantidad) as total FROM Detalles group by tienda order by tienda asc",null);
+
+        if (cursor.moveToFirst()){
+            do{
+                totales.add(cursor.getFloat(cursor.getColumnIndex("total")));
+
+            }while (cursor.moveToNext());
+        }
+
+        return totales;
+    }
+
+    public LinkedList<Float> vueltos (){
+        LinkedList <Float> totales = new LinkedList<Float>();
+        SQLiteDatabase db =  getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT sum (producto_vuelto*producto_cantidad) as total FROM Detalles group by tienda order by tienda asc",null);
+
+        if (cursor.moveToFirst()){
+            do{
+                totales.add(cursor.getFloat(cursor.getColumnIndex("total")));
+
+            }while (cursor.moveToNext());
+        }
+
+        return totales;
+    }
+
     public float granTotal (){
         float ttotal=0;
         SQLiteDatabase db =  getReadableDatabase();
@@ -111,6 +144,22 @@ public class Admin_SQLite extends SQLiteOpenHelper {
     }
 
 
+    public LinkedList<Integer> tiendas (){
+        LinkedList<Integer> tienda = new LinkedList<Integer>();
+        SQLiteDatabase db =  getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT tienda FROM Detalles order by tienda asc",null);
+
+        if (cursor.moveToFirst()){
+            do{
+                tienda.add(cursor.getInt(cursor.getColumnIndex("tienda")));
+
+            }while (cursor.moveToNext());
+        }
+
+        return tienda;
+    }
+
     public void actualizar (String cb,int producto_cantidad ){
 
         SQLiteDatabase db = getWritableDatabase();
@@ -138,7 +187,7 @@ public class Admin_SQLite extends SQLiteOpenHelper {
 
     public int registros (){
         SQLiteDatabase db =  getReadableDatabase();
-        return (int ) DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM Detalles", null);
+        return (int) DatabaseUtils.longForQuery(db, "SELECT count(*) FROM Detalles", null);
     }
 
 }

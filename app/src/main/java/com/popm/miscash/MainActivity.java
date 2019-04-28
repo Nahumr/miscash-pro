@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkLocationPermission();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
+        checkLocationPermission();
         helper = new UsuarioSQL(getApplicationContext());
 
         nombre =(TextView) (TextView) navigationView.getHeaderView(0).findViewById(R.id.usuario_nombre);
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity
         nombre.setText(helper.nombreApellido());
         saldo.setText("Saldo: $1000.00 MX");
 
-        addFragment(new Mapa_tiendas(),true,"one");
+        addFragment(new Perfil(),false,"one");
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             addFragment(new Perfil(),true,"six");
 
         } else if (id == R.id.menu_recompensas) {
-            addFragment(new ListaProductos(),true,"two");
+            addFragment(new Promociones(),true,"two");
 
         } else if (id == R.id.menu_califica) {
             addFragment(new CalificaTienda(),true,"two");
@@ -140,8 +139,9 @@ public class MainActivity extends AppCompatActivity
             args.putString("PRODC", "LOGIN");
             login.setArguments(args);
             addFragment(login,true,"three");
+        }else if(id == R.id.mtarjeta){
+            addFragment(new Tarjeta(),false,null);
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -160,61 +160,17 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /*public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(getApplicationContext())
-                        .setTitle("Necesitamos tu autorización")
-                        .setMessage("¿Nos otorgas el saber tu ubicación?")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(MainActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
-                            }
-                        })
-                        .create()
-                        .show();
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }*/
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
-
 
             } else {
                 // No explanation needed, we can request the permission.

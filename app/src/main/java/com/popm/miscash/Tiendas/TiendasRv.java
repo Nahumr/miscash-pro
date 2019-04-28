@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.popm.miscash.Conexiones.SqlServerC;
 import com.popm.miscash.R;
+import com.popm.miscash.Usuario.UsuarioSQL;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -45,6 +46,7 @@ public class TiendasRv extends RecyclerView.Adapter<TiendasRv.TiendasVH> impleme
 
     @Override
     public void onBindViewHolder(@NonNull TiendasVH tiendasVH, final int i) {
+        final UsuarioSQL usuario = new UsuarioSQL(context);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.calificaciones_array,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tiendasVH.calificacion.setAdapter(adapter);
@@ -58,32 +60,37 @@ public class TiendasRv extends RecyclerView.Adapter<TiendasRv.TiendasVH> impleme
                 if(selectedItem.equals("1"))
                 {
                     califica(1,data.get(i).id_ticket);
-                    data.remove(i);
                     update(i);
+                    abonaVuelto(usuario.correo(),data.get(i).getMonto());
+                    data.remove(i);
                     Snackbar.make(view,"Gracias por tu participacion",Snackbar.LENGTH_LONG).show();
                 }else if(selectedItem.equals("2"))
                 {
                     califica(2,data.get(i).id_ticket);
-                    data.remove(i);
                     update(i);
+                    abonaVuelto(usuario.correo(),data.get(i).getMonto());
+                    data.remove(i);
                     Snackbar.make(view,"Gracias por tu participacion",Snackbar.LENGTH_LONG).show();
                 }else if(selectedItem.equals("3"))
                 {
                     califica(3,data.get(i).id_ticket);
-                    data.remove(i);
                     update(i);
+                    abonaVuelto(usuario.correo(),data.get(i).getMonto());
+                    data.remove(i);
                     Snackbar.make(view,"Gracias por tu participacion",Snackbar.LENGTH_LONG).show();
                 }else if(selectedItem.equals("4"))
                 {
                     califica(4,data.get(i).id_ticket);
-                    data.remove(i);
                     update(i);
+                    abonaVuelto(usuario.correo(),data.get(i).getMonto());
+                    data.remove(i);
                     Snackbar.make(view,"Gracias por tu participacion",Snackbar.LENGTH_LONG).show();
                 } else if(selectedItem.equals("5"))
                 {
                     califica(5,data.get(i).id_ticket);
-                    data.remove(i);
                     update(i);
+                    abonaVuelto(usuario.correo(),data.get(i).getMonto());
+                    data.remove(i);
                     Snackbar.make(view,"Gracias por tu participacion",Snackbar.LENGTH_LONG).show();
                 }
 
@@ -139,6 +146,19 @@ public class TiendasRv extends RecyclerView.Adapter<TiendasRv.TiendasVH> impleme
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        conexion.conexionBD();
+    }
+
+    public void abonaVuelto(String correo,String monto){
+        SqlServerC conexion = new SqlServerC();
+        try {
+            PreparedStatement pst= conexion.conexionBD().prepareStatement("update usuario set saldo+= ? where correo ='"+correo+"';");
+            pst.setFloat(1,Float.valueOf(monto));
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        conexion.conexionBD();
     }
 
     public void update(int i){

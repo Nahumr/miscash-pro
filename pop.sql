@@ -1,3 +1,5 @@
+Drop database XLR8;
+create database XLR8;
 USE XLR8;
 
 CREATE TABLE USUARIO(
@@ -9,16 +11,16 @@ CREATE TABLE USUARIO(
     sexo VARCHAR (1) not null,
     saldo FLOAT (7) default 0,
     telefono VARCHAR(13)  NOT NULL UNIQUE,
-    pass VARCHAR(20)  NOT NULL    
+    pass VARCHAR(20)  NOT NULL
 );
 
 CREATE TABLE PRODUCTOS (
     codigo_b VARCHAR(13) NOT NULL UNIQUE,
     nombre VARCHAR (40) NOT NULL,
-    precio_c FLOAT (7) NOT NULL,    
-    precio_v FLOAT (7) NOT NULL,    
+    precio_c FLOAT (7) NOT NULL,
+    precio_v FLOAT (7) NOT NULL,
     vuelto FLOAT (7) NOT NULL,
-    cantidad int 
+    cantidad int
 );
 
 CREATE TABLE TIENDA (
@@ -49,9 +51,8 @@ CREATE TABLE COMPRA_TENDERO(
     codigo_b VARCHAR(13) not null,
     tienda INT not null,
     cantidad int not null,
-    fechac date not null        
+    fechac date not null
 );
-
 
 
 CREATE TABLE DISPONIBLIDAD (
@@ -74,6 +75,13 @@ create table recompensas (
     precio float (7),
     cantidad int not null,
 );
+
+create table ticket_recomponsa (
+    id_recompensa int not null,
+    usuario VARCHAR (40),
+    cantidad int not null,
+    f_compra date
+  );
 
 
 alter table usuario add constraint pk_usuario primary key(correo);
@@ -176,8 +184,3 @@ INSERT INTO DISPONIBLIDAD(codigo_b,id_tienda,cantidad) VALUES ('5348000905741',9
 INSERT INTO DISPONIBLIDAD(codigo_b,id_tienda,cantidad) VALUES ('6017912754131',9099,324);
 INSERT INTO DISPONIBLIDAD(codigo_b,id_tienda,cantidad) VALUES ('8004204230656',9099,43);
 INSERT INTO DISPONIBLIDAD(codigo_b,id_tienda,cantidad) VALUES ('9315921365915',9099,43);
-
-
-    
-
-

@@ -31,6 +31,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -62,10 +63,11 @@ public class Carrito extends Fragment {
         resumen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final float [] datos = new float[2];
-                datos[0] = helper.granTotal();
-                datos[1] = helper.totalVuelto();
-
+                final float total =helper.granTotal();
+                final int lon = helper.registros();
+                final LinkedList<Float> totales = helper.totales();
+                final LinkedList<Float> vueltos = helper.vueltos();
+                final LinkedList<Integer> tienda = helper.tiendas();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                 if (helper.registros()>0){
@@ -73,13 +75,16 @@ public class Carrito extends Fragment {
                     if (usuarioSQL.campos()==1){
 
                         builder.setTitle("¿Estas seguro de tu compra?");
-                        builder.setMessage("El total de tu compra es de: "+String.valueOf(datos[0]));
+                        builder.setMessage("El total de tu compra es de: "+String.valueOf(total));
 
                         builder.setCancelable(false);
                         builder.setPositiveButton("Efectivo", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                finalizaCompra(datos[0],datos[1],9097,"E");
+
+                                for (int i=0;i<lon;i++){
+                                    finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"E");
+                                }
                                 helper.drop();
                                 Toast.makeText(getContext(), "Presentate en la tienda con tu codigo", Toast.LENGTH_SHORT).show();
                                 addFragment(new ResumenTickets(),true,"TICKETS");
@@ -90,8 +95,10 @@ public class Carrito extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                if (realizaPago(datos[0])){
-                                    finalizaCompra(datos[0],datos[1],9097,"S");
+                                if (realizaPago(total)){
+                                    for (int i=0;i<lon;i++){
+                                        finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"S");
+                                    }
                                     helper.drop();
                                     addFragment(new ResumenTickets(),true,"TICKETS");
                                     Toast.makeText(getContext(), "Presenta en la tienda tu codigo", Toast.LENGTH_SHORT).show();
@@ -205,10 +212,6 @@ public class Carrito extends Fragment {
             pst.setFloat(5,vueltoT);
             pst.setString(6,tipo_compra);
             pst.executeUpdate();
-
-            /*pst = conexion.conexionBD().prepareStatement("update usuario set saldo = saldo + ? where usuario.correo = 'nrc545@gmail.com';");
-            pst.setFloat(1,vueltoT);
-            pst.executeUpdate();*/
             pst.close();
 
         } catch (SQLException e) {
