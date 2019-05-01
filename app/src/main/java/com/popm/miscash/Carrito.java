@@ -75,7 +75,7 @@ public class Carrito extends Fragment {
                     if (usuarioSQL.campos()==1){
 
                         builder.setTitle("¿Estas seguro de tu compra?");
-                        builder.setMessage("El total de tu compra es de: "+String.valueOf(total));
+                        builder.setMessage("El total de tu compra es de: $"+String.valueOf(total));
 
                         builder.setCancelable(true);
                         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
@@ -84,7 +84,7 @@ public class Carrito extends Fragment {
 
 
                                 ///////////////////////////////////////////////////////////////////////////77
-                                final String[] Options = {"Saldo", "Efectivo","Tarjeta"};
+                                final String[] Options = {"Efectivo", "Saldo","Tarjeta"};
                                 AlertDialog.Builder window;
                                 window = new AlertDialog.Builder(getContext());
                                 window.setTitle("Selecciona un metodo de pago");
@@ -96,7 +96,7 @@ public class Carrito extends Fragment {
                                                 finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"E");
                                             }
                                             helper.drop();
-                                            Toast.makeText(getContext(), "Presentate en la tienda con tu codigo", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Paga en tienda!", Toast.LENGTH_SHORT).show();
                                             addFragment(new ResumenTickets(),true,"TICKETS");
                                         }else if(which == 1){
                                             if (realizaPago(total)){
@@ -106,12 +106,12 @@ public class Carrito extends Fragment {
                                                 helper.drop();
                                                 addFragment(new ResumenTickets(),true,"TICKETS");
                                                 Toast.makeText(getContext(), "Presenta en la tienda tu codigo", Toast.LENGTH_SHORT).show();
-                                            }else {
+                                            }else{
                                                 Snackbar.make(v,"No cuentas con saldo suficiente",Snackbar.LENGTH_LONG).show();
                                             }
                                         }else if(which == 2){
                                             //second option clicked, do this...
-                                            Toast.makeText(getContext(), "Se paciente,esta en desarrollo....", Toast.LENGTH_LONG).show();
+                                            Snackbar.make(v,"En desarrollo....",Snackbar.LENGTH_LONG).show();
                                         }else{
                                             //theres an error in what was selected
                                             Toast.makeText(getContext(), "Hmmm, No puedes pagar de esa forma", Toast.LENGTH_LONG).show();

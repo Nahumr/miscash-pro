@@ -1,6 +1,8 @@
 package com.popm.miscash.PromocionesP;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -80,12 +82,27 @@ public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonVi
         personViewHolder.agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (realizaPago(Float.valueOf(productos.get(i).getPrecio()))){
-                    Toast.makeText(context,"Gracias por tu compra!", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(context,"No cuentas con saldo suficiente! :(!", Toast.LENGTH_LONG).show();
-                }
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("¿Estas seguro de tu compra?");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (realizaPago(Float.valueOf(productos.get(i).getPrecio()))){
+                            Toast.makeText(context,"Gracias por tu compra!", Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(context,"No cuentas con saldo suficiente! :(!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
             }
         });
     }
