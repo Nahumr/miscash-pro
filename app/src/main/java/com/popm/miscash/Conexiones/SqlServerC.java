@@ -48,7 +48,7 @@ public class SqlServerC {
             Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
 
             conexion = DriverManager.getConnection(""
-                    + "jdbc:jtds:sqlserver:"+ip+"; instance = 172.31.0.18;"
+                    + "jdbc:jtds:sqlserver:"+ip+";"
                     + "user="+user+";password="+password+";");
 
             Log.i("DATA-","CONEXION EXITOSA");

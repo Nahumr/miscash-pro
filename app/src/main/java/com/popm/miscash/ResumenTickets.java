@@ -89,7 +89,7 @@ public class ResumenTickets extends Fragment {
             ResultSet resultSet = statement.executeQuery(
                     "select ticket.id_ticket,tienda.nombre,ticket.fecha,ticket.total,ticket.vuelto, ticket.tipop" +
                             " from ticket inner join tienda on ticket.tienda = tienda.id_tienda where ticket.statusT = 'X'" +
-                            " and usuario = '"+usuarioSQL.correo()+"';");
+                            " and usuario = '"+usuarioSQL.correo()+"' order by fecha desc;");
 
             while (resultSet.next()){
                 data.add(new Ticket(

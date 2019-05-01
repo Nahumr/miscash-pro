@@ -77,43 +77,59 @@ public class Carrito extends Fragment {
                         builder.setTitle("¿Estas seguro de tu compra?");
                         builder.setMessage("El total de tu compra es de: "+String.valueOf(total));
 
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("Efectivo", new DialogInterface.OnClickListener() {
+                        builder.setCancelable(true);
+                        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                for (int i=0;i<lon;i++){
-                                    finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"E");
-                                }
-                                helper.drop();
-                                Toast.makeText(getContext(), "Presentate en la tienda con tu codigo", Toast.LENGTH_SHORT).show();
-                                addFragment(new ResumenTickets(),true,"TICKETS");
-                            }
-                        });
 
-                        builder.setNegativeButton("Saldo", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                if (realizaPago(total)){
-                                    for (int i=0;i<lon;i++){
-                                        finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"S");
+                                ///////////////////////////////////////////////////////////////////////////77
+                                final String[] Options = {"Saldo", "Efectivo","Tarjeta"};
+                                AlertDialog.Builder window;
+                                window = new AlertDialog.Builder(getContext());
+                                window.setTitle("Selecciona un metodo de pago");
+                                window.setItems(Options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(which == 0){
+                                            for (int i=0;i<lon;i++){
+                                                finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"E");
+                                            }
+                                            helper.drop();
+                                            Toast.makeText(getContext(), "Presentate en la tienda con tu codigo", Toast.LENGTH_SHORT).show();
+                                            addFragment(new ResumenTickets(),true,"TICKETS");
+                                        }else if(which == 1){
+                                            if (realizaPago(total)){
+                                                for (int i=0;i<lon;i++){
+                                                    finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"S");
+                                                }
+                                                helper.drop();
+                                                addFragment(new ResumenTickets(),true,"TICKETS");
+                                                Toast.makeText(getContext(), "Presenta en la tienda tu codigo", Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                Snackbar.make(v,"No cuentas con saldo suficiente",Snackbar.LENGTH_LONG).show();
+                                            }
+                                        }else if(which == 2){
+                                            //second option clicked, do this...
+                                            Toast.makeText(getContext(), "Se paciente,esta en desarrollo....", Toast.LENGTH_LONG).show();
+                                        }else{
+                                            //theres an error in what was selected
+                                            Toast.makeText(getContext(), "Hmmm, No puedes pagar de esa forma", Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                    helper.drop();
-                                    addFragment(new ResumenTickets(),true,"TICKETS");
-                                    Toast.makeText(getContext(), "Presenta en la tienda tu codigo", Toast.LENGTH_SHORT).show();
-                                }else {
-                                    Snackbar.make(v,"No cuentas con saldo suficiente",Snackbar.LENGTH_LONG).show();
-                                }
+                                });
+
+                                window.show();
                             }
                         });
-
-                        builder.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
+                                Toast.makeText(getContext(), ":(", Toast.LENGTH_LONG).show();
                             }
                         });
+
                     }else {
                         builder.setTitle("Es necesario iniciar sesión");
                         builder.setMessage("Por favor inicia sesion");
@@ -256,7 +272,7 @@ public class Carrito extends Fragment {
             try {
                 PreparedStatement pst= conexion.conexionBD().prepareStatement("update usuario set saldo-= ? " +
                         "where correo= '"+ usuarioSQL.correo()+"';"
-                        );
+                );
                 pst.setFloat(1,total);
                 pst.executeUpdate();
                 pst.close();

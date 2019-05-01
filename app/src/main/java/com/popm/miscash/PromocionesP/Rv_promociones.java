@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.popm.miscash.Conexiones.SqlServerC;
 import com.popm.miscash.Productos.RecyclerAdapter;
 import com.popm.miscash.R;
+import com.popm.miscash.Usuario.UsuarioSQL;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
-public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonViewHolder> implements AdapterView.OnItemSelectedListener {
+public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonViewHolder> {
 
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder {
@@ -27,7 +35,6 @@ public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonVi
         TextView nombre;
         TextView precio;
         TextView descripcion;
-        Spinner cantidad;
         ImageButton agregar;
 
         PersonViewHolder(View itemView) {
@@ -36,14 +43,13 @@ public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonVi
             nombre = (TextView)itemView.findViewById(R.id.Pnombre);
             precio = (TextView)itemView.findViewById(R.id.Pprecio);
             descripcion = (TextView)itemView.findViewById(R.id.Pdescripcion);
-            cantidad = (Spinner)itemView.findViewById(R.id.PCantidad);
             agregar = (ImageButton) itemView.findViewById(R.id.PAgregar);
         }
     }
 
     Context context;
     List<Promocion> productos;
-
+    UsuarioSQL usuarioSQL;
 
     public Rv_promociones(List<Promocion> productos, Context context){
         this.productos = productos;
@@ -65,13 +71,23 @@ public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonVi
     @Override
     public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
 
+        usuarioSQL= new UsuarioSQL(context);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.cantidad_array,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        personViewHolder.cantidad.setAdapter(adapter);
         personViewHolder.nombre.setText(productos.get(i).getNombre());
-        personViewHolder.precio.setText(productos.get(i).precio);
+        personViewHolder.precio.setText("Costo: $"+productos.get(i).precio);
         personViewHolder.descripcion.setText(productos.get(i).descripcion);
+        personViewHolder.agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (realizaPago(Float.valueOf(productos.get(i).getPrecio()))){
+                    Toast.makeText(context,"Gracias por tu compra!", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(context,"No cuentas con saldo suficiente! :(!", Toast.LENGTH_LONG).show();
+                }
 
+            }
+        });
     }
 
     @Override
@@ -79,14 +95,43 @@ public class Rv_promociones extends RecyclerView.Adapter<Rv_promociones.PersonVi
         return productos.size();
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-    }
+    private boolean realizaPago (float total){
+        float saldo=0;
+        SqlServerC conexion = new SqlServerC();
+        Statement statement = null;
+        try {
+            statement = conexion.conexionBD().createStatement();
+            ResultSet resultSet = statement.executeQuery(
+                    "select usuario.saldo as saldo" +
+                            " from usuario where usuario.correo = '"+usuarioSQL.correo()+"';");
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-    }
+            while (resultSet.next()){
+                saldo=resultSet.getFloat("saldo");
+            }
 
+            Log.i("USUARIO",usuarioSQL.correo());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (saldo>=total){
+
+            try {
+                PreparedStatement pst= conexion.conexionBD().prepareStatement("update usuario set saldo-= ? " +
+                        "where correo= '"+ usuarioSQL.correo()+"';"
+                );
+                pst.setFloat(1,total);
+                pst.executeUpdate();
+                pst.close();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 
 }
