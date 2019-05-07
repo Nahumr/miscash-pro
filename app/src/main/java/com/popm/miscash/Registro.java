@@ -79,7 +79,11 @@ public class Registro extends Fragment {
             pst.setString(7 , datoTelefono(telefono_ed));
             pst.setString(8,pass_ed.getText().toString());
             pst.executeUpdate();
-            addFragment(new Login(),true,"two");
+            Login login = new Login();
+            Bundle args = new Bundle();
+            args.putString("PRODC", "TIENDA");
+            login.setArguments(args);
+            addFragment(login,false,"three");
             Toast.makeText(getContext(),"Inicia sesion",Toast.LENGTH_LONG).show();
 
         }catch (SQLException e) {

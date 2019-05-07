@@ -81,6 +81,8 @@ public class Login extends Fragment {
                                 addFragment(new Perfil(),false,"LOGIN-P");
                             }else if (procedencia.equals("CALIFICA")){
                                 addFragment(new CalificaTienda(),false,"LOGIN-CT");
+                            }else if (procedencia.equals("TIENDA")){
+                                addFragment(new Mapa_tiendas(),false,"LOGIN-MT");
                             }else {
                                 addFragment(new Mapa_tiendas(),false,"LOGIN-M");
                             }
