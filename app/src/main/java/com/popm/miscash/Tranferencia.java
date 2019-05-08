@@ -29,6 +29,7 @@ public class Tranferencia extends Fragment {
     EditText correo,cantidad;
     String [] correos = new String [2];
     String monto;
+    UsuarioSQL usuario;
     public Tranferencia() {
         // Required empty public constructor
     }
@@ -52,14 +53,24 @@ public class Tranferencia extends Fragment {
                 tranferir.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UsuarioSQL usuario = new UsuarioSQL(getContext());
+                        usuario = new UsuarioSQL(getContext());
                         correos[0] = usuario.correo();
                         correos[1]= correo.getText().toString();
                         monto = cantidad.getText().toString();
-                        enviaCorreo(correos,monto);
-                        correo.setText("");
-                        cantidad.setText("");
-                        Toast.makeText(getContext(), "Transferencia exitosa!",Toast.LENGTH_LONG).show();
+
+                        if (existencia(correos[1])){
+                            if (saldoSuficiente(Float.valueOf(monto))){
+                                enviaCorreo(correos,monto);
+                                correo.setText("");
+                                cantidad.setText("");
+                                Toast.makeText(getContext(), "Transferencia exitosa!",Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(getContext(), "No cuentas con saldo suficiente",Toast.LENGTH_LONG).show();
+                            }
+                        }else{
+                            Toast.makeText(getContext(), "Verifica el destinatario!",Toast.LENGTH_LONG).show();
+                        }
+
                     }
                 });
                 return view;
@@ -82,5 +93,57 @@ public class Tranferencia extends Fragment {
         }
     }
 
+    private boolean saldoSuficiente (float total){
+        float saldo=0;
+        SqlServerC conexion = new SqlServerC();
+        Statement statement = null;
+        try {
+            statement = conexion.conexionBD().createStatement();
+            ResultSet resultSet = statement.executeQuery(
+                    "select usuario.saldo as saldo" +
+                            " from usuario where usuario.correo = '"+usuario.correo()+"';");
 
+            while (resultSet.next()){
+                saldo=resultSet.getFloat("saldo");
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (saldo>=total)
+            return true;
+
+
+        return false;
+    }
+
+    private boolean existencia (String correo){
+
+        SqlServerC conexion = new SqlServerC();
+        Statement statement = null;
+        int encontrado=0;
+
+        try {
+            statement = conexion.conexionBD().createStatement();
+            ResultSet resultSet = statement.executeQuery(
+                    "select count(*) as cuenta" +
+                            " from usuario where usuario.correo = '"+correo+"';");
+
+            while (resultSet.next()){
+                encontrado=resultSet.getInt("cuenta");
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        if (encontrado==1)
+            return true;
+
+        return false;
+    }
 }
