@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
             addFragment(new CalificaTienda(),true,"two");
 
         } else if (id == R.id.nav_share) {
-
+            Toast.makeText(getApplicationContext(),"En desarrollo",Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_send) {
             addFragment(new Tranferencia(),true,"two");
         } else if (id == R.id.menu_login) {

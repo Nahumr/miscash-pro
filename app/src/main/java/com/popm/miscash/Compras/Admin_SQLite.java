@@ -71,7 +71,6 @@ public class Admin_SQLite extends SQLiteOpenHelper {
                     Float precio = cursor.getFloat(cursor.getColumnIndex("producto_precio"));
                     Float vuelto = cursor.getFloat(cursor.getColumnIndex("producto_vuelto"));
                     int cantidad = cursor.getInt(cursor.getColumnIndex("producto_cantidad"));
-
                     datos.add(new CarritoItem(nombre,cb,cantidad,precio,vuelto));
                 }while (cursor.moveToNext());
             }
@@ -79,36 +78,25 @@ public class Admin_SQLite extends SQLiteOpenHelper {
         return datos;
     }
 
-    public LinkedList<Float> totales (){
-        LinkedList <Float> totales = new LinkedList<Float>();
+    public List<CarritoItem> datoItems (int tienda){
+        List <CarritoItem> datos = new ArrayList<CarritoItem>();
+
         SQLiteDatabase db =  getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT sum (producto_precio*producto_cantidad) as total FROM Detalles group by tienda order by tienda asc",null);
+        Cursor cursor = db.rawQuery("SELECT * FROM Detalles where tienda = "+String.valueOf(tienda),null);
 
         if (cursor.moveToFirst()){
             do{
-                totales.add(cursor.getFloat(cursor.getColumnIndex("total")));
-
+                String cb = cursor.getString(cursor.getColumnIndex("producto_cb"));
+                String nombre = cursor.getString(cursor.getColumnIndex("producto_nombre"));
+                Float precio = cursor.getFloat(cursor.getColumnIndex("producto_precio"));
+                Float vuelto = cursor.getFloat(cursor.getColumnIndex("producto_vuelto"));
+                int cantidad = cursor.getInt(cursor.getColumnIndex("producto_cantidad"));
+                datos.add(new CarritoItem(nombre,cb,cantidad,precio,vuelto));
             }while (cursor.moveToNext());
         }
 
-        return totales;
-    }
-
-    public LinkedList<Float> vueltos (){
-        LinkedList <Float> totales = new LinkedList<Float>();
-        SQLiteDatabase db =  getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT sum (producto_vuelto*producto_cantidad) as total FROM Detalles group by tienda order by tienda asc",null);
-
-        if (cursor.moveToFirst()){
-            do{
-                totales.add(cursor.getFloat(cursor.getColumnIndex("total")));
-
-            }while (cursor.moveToNext());
-        }
-
-        return totales;
+        return datos;
     }
 
     public float granTotal (){
@@ -183,6 +171,37 @@ public class Admin_SQLite extends SQLiteOpenHelper {
         if (db!=null){
             db.execSQL("DELETE from Detalles ");
         }
+    }
+
+    public float totalpagoTienda(int tienda){
+
+        float total=0;
+        SQLiteDatabase db =  getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT sum (producto_precio*producto_cantidad) as total FROM Detalles where tienda = "+String.valueOf(tienda),null);
+
+        if (cursor.moveToFirst()){
+            do{
+                total += cursor.getFloat(cursor.getColumnIndex("total"));
+
+            }while (cursor.moveToNext());
+        }
+
+        return total;
+    }
+    public float totalvueltoTienda(int tienda){
+
+        float total=0;
+        SQLiteDatabase db =  getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT sum (producto_vuelto*producto_cantidad) as total FROM Detalles where tienda = "+String.valueOf(tienda),null);
+
+        if (cursor.moveToFirst()){
+            do{
+                total += cursor.getFloat(cursor.getColumnIndex("total"));
+
+            }while (cursor.moveToNext());
+        }
+
+        return total;
     }
 
     public int registros (){

@@ -30,8 +30,8 @@ public class SqlServerC {
     Connection conexion ;
 
     public SqlServerC (){
+        //ip = "//192.168.3.137/XLR8";
         ip = "//192.168.100.5/XLR8";
-        //ip = "//192.168.1.47/XLR8";
         db = "XLR8";
         user = "nahumr";
         password = "Rodriguez1$";

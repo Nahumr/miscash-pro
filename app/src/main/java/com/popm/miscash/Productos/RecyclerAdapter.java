@@ -1,6 +1,7 @@
 package com.popm.miscash.Productos;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Person
 
         PersonViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.card_view);
+            cv = (CardView)itemView.findViewById(R.id.card_viewP);
             nombre = (TextView)itemView.findViewById(R.id.CvNombre);
             precio = (TextView)itemView.findViewById(R.id.CvPrecio);
             vuelto = (TextView)itemView.findViewById(R.id.CvVuelto);
@@ -83,7 +84,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Person
 
                 admin.agregar(productos.get(i).getCodigo_barras(),productos.get(i).getNombre(),productos.get(i).getPrecio(),
                         productos.get(i).getVuelto(),Integer.valueOf(personViewHolder.cantidad.getSelectedItem().toString()),productos.get(i).getTienda());
-
+                int color = Color.parseColor("#49F560");
+                personViewHolder.cv.setCardBackgroundColor(color);
                 Snackbar.make(v, "Agregado al carrito", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

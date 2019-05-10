@@ -64,10 +64,7 @@ public class Carrito extends Fragment {
             @Override
             public void onClick(final View v) {
                 final float total =helper.granTotal();
-                final int lon = helper.registros();
-                final LinkedList<Float> totales = helper.totales();
-                final LinkedList<Float> vueltos = helper.vueltos();
-                final LinkedList<Integer> tienda = helper.tiendas();
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                 if (helper.registros()>0){
@@ -92,28 +89,20 @@ public class Carrito extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         if(which == 0){
-                                            for (int i=0;i<lon;i++){
-                                                finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"E");
-                                            }
-                                            helper.drop();
-                                            Toast.makeText(getContext(), "Paga en tienda!", Toast.LENGTH_SHORT).show();
-                                            addFragment(new ResumenTickets(),true,"TICKETS");
+                                            finalizaCompra("E");
+                                            transicion();
+                                            Snackbar.make(v,"Paga en tienda",Snackbar.LENGTH_LONG).show();
                                         }else if(which == 1){
-                                            if (realizaPago(total)){
-                                                for (int i=0;i<lon;i++){
-                                                    finalizaCompra(totales.get(i),vueltos.get(i),tienda.get(i),"S");
-                                                }
-                                                helper.drop();
-                                                addFragment(new ResumenTickets(),true,"TICKETS");
-                                                Toast.makeText(getContext(), "Presenta en la tienda tu codigo", Toast.LENGTH_SHORT).show();
+                                            if (saldoSuficiente(total)){
+                                                finalizaCompra("S");
+                                                transicion();
+                                                Snackbar.make(v,"Pagado con saldo",Snackbar.LENGTH_LONG).show();
                                             }else{
-                                                Snackbar.make(v,"No cuentas con saldo suficiente",Snackbar.LENGTH_LONG).show();
+                                                Snackbar.make(v,"No cuentas con saldo suficiente!",Snackbar.LENGTH_LONG).show();
                                             }
                                         }else if(which == 2){
-                                            //second option clicked, do this...
                                             Snackbar.make(v,"En desarrollo....",Snackbar.LENGTH_LONG).show();
                                         }else{
-                                            //theres an error in what was selected
                                             Toast.makeText(getContext(), "Hmmm, No puedes pagar de esa forma", Toast.LENGTH_LONG).show();
                                         }
                                     }
@@ -157,7 +146,7 @@ public class Carrito extends Fragment {
                 }else{
                     builder.setTitle("Tu carrito esta vacio");
 
-                    builder.setCancelable(false);
+                    builder.setCancelable(true);
                     builder.setPositiveButton("Buscar una tienda", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -181,62 +170,62 @@ public class Carrito extends Fragment {
         return view;
     }
 
-
-
-    void finalizaCompra (float total,float vueltoT,int id_tienda,String tipo_compra){
-
-        List <CarritoItem> data = helper.datoItems();
-        Random random = new Random();
-        int id = random.nextInt(9999);
-
-        registraTicket(id,total,vueltoT,usuarioSQL.correo(),id_tienda,tipo_compra);
-        registraCompra(data,id);
+    void transicion (){
+        helper.drop();
+        ResumenTickets resumen = new ResumenTickets();
+        addFragment(resumen,false,"CARRITO");
     }
 
-    void registraCompra(List <CarritoItem> data, int id){
-        PreparedStatement pst;
+    void finalizaCompra (String tipo_compra){
+
         SqlServerC conexion = new SqlServerC();
-        for (CarritoItem item: data){
+        LinkedList<Integer> tiendas = helper.tiendas();
 
-            try{
-                //PreparedStatement pst = conexionBD().prepareStatement("INSERT INTO USUARIO (nombre, apellido_p, apellido_m, fecha_nac, correo, sexo, saldo, rfc, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                pst = conexion.conexionBD().prepareStatement("INSERT INTO COMPRA VALUES (?, ?, ?)");
-                pst.setInt(1,id);
-                pst.setString(2,item.getProducto_cb());
-                pst.setInt(3,item.getProducto_cantidad());
-                pst.executeUpdate();
-
-            }catch (SQLException e) {
-
-                Log.e("ERROR", e.getMessage());
+        String correo = usuarioSQL.correo();
+        for (int tienda : tiendas){
+            Random random = new Random();
+            int ticket = random.nextInt(9999);
+            float total = helper.totalpagoTienda(tienda);
+            float vuelto = helper.totalvueltoTienda(tienda);
+            List <CarritoItem> productos = helper.datoItems(tienda);
+            registroTicket(conexion,ticket,tienda,correo,tipo_compra,total,vuelto);
+            for (CarritoItem item : productos ){
+                    registroProducto(conexion,item,ticket);
             }
         }
+        conexion.cierraConexion();
     }
 
-    void registraTicket (int id, float total, float vueltoT,String usuario, int tienda,String tipo_compra){
 
-        SqlServerC conexion = new SqlServerC();
+    void registroProducto (SqlServerC conexion,CarritoItem item,int ticket){
+        PreparedStatement pst;
 
-        try {
-            /*PreparedStatement pst = conexion.conexionBD().prepareStatement("INSERT INTO TICKET " +
-                    "(id_ticket,usuario,tienda,total) values(?,?,?,?)");*/
-            PreparedStatement pst = conexion.conexionBD().prepareStatement("INSERT INTO TICKET (id_ticket,usuario,tienda,total,vuelto,tipop) VALUES (?, ?, ?, ?,?,?)");
-            pst.setInt(1,id);
-            pst.setString(2,usuario);
-            pst.setInt(3,tienda);
-            pst.setFloat(4,total);
-            pst.setFloat(5,vueltoT);
-            pst.setString(6,tipo_compra);
+        try{
+            pst = conexion.conexionBD().prepareStatement("INSERT INTO COMPRA VALUES (?, ?, ?)");
+            pst.setInt(1,ticket);
+            pst.setString(2,item.getProducto_cb());
+            pst.setInt(3,item.getProducto_cantidad());
             pst.executeUpdate();
-            pst.close();
-
-        } catch (SQLException e) {
-
+        }catch (SQLException e) {
             Log.e("ERROR", e.getMessage());
         }
     }
+    void registroTicket (SqlServerC conexion,int ticket,int tienda,String correo,String tipo_compra,float total, float vuelto){
+        PreparedStatement pst;
+        try{
 
-
+            pst = conexion.conexionBD().prepareStatement("INSERT INTO TICKET (id_ticket,usuario,tienda,total,vuelto,tipop) VALUES (?, ?, ?, ?,?,?)");
+            pst.setInt(1,ticket);
+            pst.setString(2,correo);
+            pst.setInt(3,tienda);
+            pst.setFloat(4,total);
+            pst.setFloat(5,vuelto);
+            pst.setString(6,tipo_compra);
+            pst.executeUpdate();
+        }catch (SQLException e) {
+            Log.e("ERROR", e.getMessage());
+        }
+    }
     void addFragment(Fragment fragment, boolean addToBackStack, String tag) {
         android.support.v4.app.FragmentManager manager = getFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
@@ -248,7 +237,7 @@ public class Carrito extends Fragment {
         ft.commitAllowingStateLoss();
     }
 
-    boolean realizaPago (float total){
+    boolean saldoSuficiente (float total){
         float saldo=0;
         SqlServerC conexion = new SqlServerC();
         Statement statement = null;

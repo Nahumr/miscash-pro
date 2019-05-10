@@ -54,7 +54,7 @@ public class ResumenTickets extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Parece que no has iniciado sesion");
             builder.setMessage("¿Deseas iniciar sesion?");
-            builder.setCancelable(true);
+            builder.setCancelable(false);
 
             builder.setPositiveButton("Iniciar sesion", new DialogInterface.OnClickListener() {
                 @Override
