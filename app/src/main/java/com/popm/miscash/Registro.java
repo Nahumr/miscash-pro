@@ -25,7 +25,17 @@ import java.util.regex.Pattern;
 
 public class Registro extends Fragment {
 
-    private EditText nombre_ed, apellido_p_ed, apellido_m_ed, fecha_nac_ed,correo_ed,telefono_ed,pass_ed;
+    EditText [] campos = new EditText[7];
+    String [] campos_String = new String [7];
+    String [] campos_Nombres = {
+            "Nombre",
+            "Apellido Paterno",
+            "Apellido Materno",
+            "Año de nacimiento",
+            "Correo Electronico",
+            "Telefono",
+            "Contraseña"
+            };
 
     public Registro() {
         // Required empty public constructor
@@ -39,19 +49,27 @@ public class Registro extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_registro, container, false);
 
-        nombre_ed = view.findViewById(R.id.registro_Nombre);
-        apellido_p_ed = view.findViewById(R.id.registro_apellidoP);
-        apellido_m_ed = view.findViewById(R.id.registro_apellidoM);
-        fecha_nac_ed = view.findViewById(R.id.registro_fnacimiento);
-        correo_ed = view.findViewById(R.id.registro_correo);
-        telefono_ed = view.findViewById(R.id.registro_telefono);
-        pass_ed = view.findViewById(R.id.registro_pass);
-        ImageButton registro = view.findViewById(R.id.registrar);
+        campos[0] = view.findViewById(R.id.registro_Nombre);
+        campos[1] = view.findViewById(R.id.registro_apellidoP);
+        campos[2] = view.findViewById(R.id.registro_apellidoM);
+        campos[3] = view.findViewById(R.id.registro_fnacimiento);
+        campos[4] = view.findViewById(R.id.registro_correo);
+        campos[5] = view.findViewById(R.id.registro_telefono);
+        campos[6] = view.findViewById(R.id.registro_pass);
+        ImageButton registro_button = view.findViewById(R.id.registrar);
 
-        registro.setOnClickListener(new View.OnClickListener() {
+        registro_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registrarUsuario();
+                if (preCarga(v)) {
+                    registrarUsuario();
+                    Toast.makeText(getContext(),"Inicia sesion",Toast.LENGTH_LONG).show();
+                    Login login = new Login();
+                    Bundle args = new Bundle();
+                    args.putString("PRODC", "TIENDA");
+                    login.setArguments(args);
+                    addFragment(login,false,"one");
+                }
             }
         });
 
@@ -60,31 +78,99 @@ public class Registro extends Fragment {
     }
 
 
+    public boolean preCarga (View view){
+        boolean estatus = true;
+        for (int i = 0 ; i<campos.length;i++){
+            String campo = campos[i].getText().toString();
+            if (campo.trim().length() == 0){
+                estatus = false;
+                Snackbar.make(view,campos_Nombres[i]+" no puede ser nulo",Snackbar.LENGTH_LONG).show();
+            }
+
+            if (i<3){
+                campos_String[i] = campo;
+            }
+
+            if (i == 3){
+                if (datoFecha(campo)){
+                    campos_String [i] = campo;
+                }else{
+                    estatus = false;
+                    Snackbar.make(view,campos_Nombres[i]+" invalido",Snackbar.LENGTH_LONG).show();
+                }
+            }
+
+            if (i == 4){
+                if (datoCorreo(campo)){
+                    campos_String [i] = campo;
+                }else{
+                    estatus = false;
+                    Snackbar.make(view,"Correo no valido",Snackbar.LENGTH_LONG).show();
+                }
+            }
+
+            if (i == 5){
+                if (datoTelefono(campo)){
+                    campos_String[i] = campo;
+                }else{
+                    estatus = false;
+                    Snackbar.make(view,"Telefono no valido",Snackbar.LENGTH_LONG).show();
+                }
+            }
+
+
+            if (i == 6){
+                campos_String [i] = campo;
+            }
+        }
+        return estatus;
+    }
+
+    public boolean datoCorreo(String correo){
+        if( Pattern.matches("[A-Za-z0-9]+@[A-Za-z0-9]+\\.[A-Za-z0-9]+",correo) ){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean datoTelefono (String telefono){
+        if( Pattern.matches("[0-9]{8}[0-9]*",telefono) ){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean datoFecha (String fecha){
+        if( Pattern.matches("[0-9]{4}",fecha) ){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean datosPersonales (String  dato){
+        if(Pattern.matches("[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ.-]+",dato)){
+            return true;
+        }
+        return false;
+    }
 
     public void registrarUsuario(){
         SqlServerC conexion = new SqlServerC();
         try{
 
-            //PreparedStatement pst = conexionBD().prepareStatement("INSERT INTO USUARIO (nombre, apellido_p, apellido_m, fecha_nac, correo, sexo, saldo, rfc, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             PreparedStatement pst = conexion.conexionBD().prepareStatement("INSERT INTO USUARIO" +
-                                                                        "(nombre, apellido_p,apellido_m,fecha_nac,correo,sexo,telefono,pass) " +
-                                                                        "VALUES (?, ?, ?, ?, ?, ?, ?,?)");
+                    "(nombre, apellido_p,apellido_m,fecha_nac,correo,sexo,telefono,pass) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?,?)");
 
-            pst.setString(1 , datosPersonales(nombre_ed));
-            pst.setString(2 , datosPersonales(apellido_p_ed));
-            pst.setString(3 , datosPersonales(apellido_m_ed) );
-            pst.setInt(4 , datoFecha(fecha_nac_ed) );
-            pst.setString(5 , datoCorreo(correo_ed));
+            pst.setString(1 , campos_String[0]);
+            pst.setString(2 , campos_String[1]);
+            pst.setString(3 , campos_String[2]);
+            pst.setInt(4 , Integer.valueOf(campos_String[3]));
+            pst.setString(5 , campos_String[4]);
             pst.setString(6 , "I");
-            pst.setString(7 , datoTelefono(telefono_ed));
-            pst.setString(8,pass_ed.getText().toString());
+            pst.setString(7 , campos_String[5]);
+            pst.setString(8,campos_String[6]);
             pst.executeUpdate();
-            Login login = new Login();
-            Bundle args = new Bundle();
-            args.putString("PRODC", "TIENDA");
-            login.setArguments(args);
-            addFragment(login,false,"three");
-            Toast.makeText(getContext(),"Inicia sesion",Toast.LENGTH_LONG).show();
 
         }catch (SQLException e) {
 
@@ -94,80 +180,6 @@ public class Registro extends Fragment {
 
     }
 
-
-    public String datosPersonales (EditText campo){
-
-        String data = campo.getText().toString().toUpperCase();
-
-        if (data == ""){
-            Toast.makeText(getContext(), "Hay un campo vacio!", Toast.LENGTH_LONG).show();
-            return "#1";
-        }
-
-        if(Pattern.matches("[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ.-]+",data.trim())){
-            return data;
-        }else{
-            return "#1";
-        }
-    }
-
-
-    public int datoFecha (EditText campo){
-
-        String dato = campo.getText().toString().trim();
-
-
-
-        if( Pattern.matches("[0-9]{4}",dato) ){
-
-            return Integer.valueOf(dato);
-
-        }
-
-        return 0000;
-
-    }
-
-
-    public String datoTelefono (EditText campo){
-
-        String telefono = "";
-
-        telefono = campo.getText().toString().trim();
-
-        if (telefono == ""){
-            return "#1";
-        }
-
-
-        if( Pattern.matches("[0-9]{10}",telefono) ){
-            return telefono;
-        }
-
-        return telefono;
-    }
-
-    public String datoCorreo(EditText campo){
-        String correo = campo.getText().toString();
-
-        if(correo == ""){
-            return "#1";
-        }
-
-        if( Pattern.matches("[A-Za-z0-9]+@[A-Za-z0-9]+\\.[A-Za-z0-9]+",correo) ){
-            return correo;
-        }else return "#1";
-    }
-
-    public String validaDatos (String dato){
-
-        String [] datos = dato.split(" ");
-
-        if (datos.length>1)
-            return datos[0];
-        else
-            return dato;
-    }
 
     public void addFragment(Fragment fragment, boolean addToBackStack, String tag) {
         android.support.v4.app.FragmentManager manager = getFragmentManager();
@@ -179,4 +191,5 @@ public class Registro extends Fragment {
         ft.replace(R.id.content_frame, fragment, tag);
         ft.commitAllowingStateLoss();
     }
+
 }

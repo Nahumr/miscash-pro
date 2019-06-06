@@ -31,10 +31,10 @@ public class SqlServerC {
 
     public SqlServerC (){
         //ip = "//192.168.3.137/XLR8";
-        ip = "//192.168.100.5/XLR8";
+        ip = "//74.208.87.37/XLR8";
         db = "XLR8";
-        user = "nahumr";
-        password = "Rodriguez1$";
+        user = "SA";
+        password = "Mejia6012";
         conexion = null;
     }
 

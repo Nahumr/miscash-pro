@@ -135,8 +135,7 @@ public class Admin_SQLite extends SQLiteOpenHelper {
     public LinkedList<Integer> tiendas (){
         LinkedList<Integer> tienda = new LinkedList<Integer>();
         SQLiteDatabase db =  getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT tienda FROM Detalles order by tienda asc",null);
+        Cursor cursor = db.rawQuery("SELECT DISTINCT (tienda) FROM Detalles order by tienda asc",null);
 
         if (cursor.moveToFirst()){
             do{
@@ -144,7 +143,6 @@ public class Admin_SQLite extends SQLiteOpenHelper {
 
             }while (cursor.moveToNext());
         }
-
         return tienda;
     }
 
