@@ -1,0 +1,9 @@
+version = 1
+
+test_patterns = ["**/*.java"]
+
+exclude_patterns = ["**/*.xml"]
+
+[[analyzers]]
+name = "java"
+enabled = true
